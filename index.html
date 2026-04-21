@@ -226,36 +226,35 @@
         font-size: 0.95rem;
         cursor: pointer;
         border-radius: 4px;
-        transition: 0.2s;
+        transition:
+          background 0.1s,
+          transform 0.1s; /* 縮短時間讓反饋更即時 */
         outline: none;
+        -webkit-tap-highlight-color: transparent; /* 移除行動裝置預設的藍色點擊框 */
       }
 
-      .opt-btn:focus {
-        outline: none;
-        box-shadow: none;
-      }
+      .opt-btn:focus,
       .opt-btn:focus-visible {
         outline: none;
+        box-shadow: none;
+        background: rgba(255, 255, 255, 0.03);
       }
 
+      /* 僅針對電腦滑鼠觸發 Hover */
       @media (hover: hover) {
         .opt-btn:hover {
           border-color: var(--neon-blue);
           color: var(--neon-blue);
-          transform: translateX(5px);
           background: rgba(0, 242, 255, 0.05);
         }
       }
 
-      /* 針對所有裝置（含手機）的點擊瞬時效果，請改用 :active */
       .opt-btn:active {
-        background: rgba(0, 242, 255, 0.2);
-        color: #fff;
-        transform: scale(0.98);
-        transition: 0.1s; /* 讓點擊反應更快一點 */
+        background: var(--neon-blue) !important;
+        color: #000 !important;
+        transition: 0s;
       }
 
-      /* 略過重複的 Result 樣式... */
       .result-panel {
         width: 100%;
         background: rgba(20, 20, 20, 0.6);
@@ -855,21 +854,40 @@
         document.getElementById('question-text').innerText = q.q;
         const container = document.getElementById('options-container');
         container.innerHTML = '';
+
         q.options.forEach((o) => {
           const b = document.createElement('button');
           b.className = 'opt-btn';
           b.innerText = o.text;
-          // 修正2: 確保移動端點擊有反應
-          b.onclick = () => {
+
+          // 定義統一的點擊處理邏輯
+          const handleSelect = (e) => {
+            e.preventDefault();
+
             finalScores[o.score]++;
             currentStep++;
+
+            // 確保在切換下一題前，按鈕失去焦點
             b.blur();
-            if (currentStep < 7) loadQuestion();
-            else showResult();
+
+            if (currentStep < 7) {
+              loadQuestion();
+            } else {
+              showResult();
+            }
           };
+
+          // 使用 pointerdown 代替 click 可以讓移動端反應更快，且能觸發 CSS :active
+          b.ontouchstart = (e) => {
+            /* 保持空，讓 CSS :active 觸發 */
+          };
+          b.onclick = handleSelect;
+
           container.appendChild(b);
         });
-        window.scrollTo({ top: 0, behavior: 'smooth' }); // 切換題目時滾動回頂部
+
+        // 每一題載入時滾動到頂部
+        window.scrollTo(0, 0);
       }
 
       function showResult() {
