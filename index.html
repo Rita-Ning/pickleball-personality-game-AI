@@ -835,6 +835,8 @@
       function startQuiz() {
         playerName =
           document.getElementById('playerName').value.trim() || '神秘球員';
+        currentStep = 0;
+        Object.keys(finalScores).forEach((key) => (finalScores[key] = 0));
         document.getElementById('screen-home').classList.add('hidden');
         document.getElementById('screen-quiz').classList.remove('hidden');
         document.getElementById('audio-ctrl').style.display = 'block';
@@ -861,6 +863,7 @@
           b.onclick = () => {
             finalScores[o.score]++;
             currentStep++;
+            b.blur();
             if (currentStep < 7) loadQuestion();
             else showResult();
           };
