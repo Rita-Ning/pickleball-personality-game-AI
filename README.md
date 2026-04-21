@@ -24,7 +24,7 @@ This mini-game is a creative fusion of modern tech and sports culture, featuring
 
 ## 🕹️ How To Play
 
-[CLICK HERE TO START](https://github.com/Rita-Ning)
+[CLICK HERE TO START](https://rita-ning.github.io/pickleball-personality-game-AI/)
 
 **Built for the Pickleball community. Hope everyone has fun! 🎾✨**
 _Developed by Rita Tang © 2026_
