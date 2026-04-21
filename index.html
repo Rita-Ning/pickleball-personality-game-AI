@@ -37,26 +37,28 @@
         font-family: 'Noto Sans TC', sans-serif;
         display: flex;
         justify-content: center;
-        align-items: flex-start;
-        min-height: 100dvh;
+        align-items: flex-start; /* 改為從頂部開始對齊，而不是置中 */
+        min-height: 100%; /* 改為 100% */
         width: 100vw;
-        overflow-x: hidden;
+        overflow-x: hidden; /* 禁止橫向捲動 */
+        overflow-y: auto; /* 允許縱向捲動 */
+      }
+
+      html {
+        height: -webkit-fill-available; /* 修正 iOS 瀏覽器高度計算問題 */
         overflow-y: auto;
-        background-image:
-          linear-gradient(45deg, #111 25%, transparent 25%),
-          linear-gradient(-45deg, #111 25%, transparent 25%),
-          linear-gradient(45deg, transparent 75%, #111 75%),
-          linear-gradient(-45deg, transparent 75%, #111 75%);
-        background-size: 4px 4px;
       }
 
       #game-container {
         width: 100%;
         max-width: 420px;
-        padding: 40px 20px;
+        padding: 20px;
         display: flex;
         flex-direction: column;
         align-items: center;
+        min-height: 100dvh;
+        position: relative;
+        box-sizing: border-box;
       }
 
       #screen-home {
@@ -75,6 +77,33 @@
         height: auto;
         padding-top: 20dvh;
         padding-bottom: 50px;
+        margin-top: 50px;
+      }
+
+      /* 建議加在 style 標籤內 */
+      #screen-loading {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* 確保內容水平置中 */
+        justify-content: center;
+        text-align: center;
+      }
+
+      /* 針對那個動態文字的類別 (如果沒有類別可以補一個，或直接針對該結構) */
+      .loading-text-main {
+        font-family: 'Black Ops One';
+        color: var(--neon-blue);
+        font-size: clamp(1rem, 5vw, 1.8rem); /* 使用更穩定的 font-size */
+        letter-spacing: 1px;
+        margin-top: 20px;
+        text-shadow: 0 0 10px var(--neon-blue);
+
+        /* 關鍵：鎖定顯示區域防止抖動 */
+        width: 100%;
+        min-height: 1.5em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
 
       #screen-result {
@@ -83,6 +112,7 @@
         height: auto;
         padding-top: 12vh;
         padding-bottom: 60px;
+        margin-top: 30px;
       }
 
       /* 略過重複的 CSS 樣式... */
@@ -182,6 +212,12 @@
       .btn-start:active {
         transform: scale(0.95);
       } /* 移動端點擊縮放 */
+
+      .btn-start:hover {
+        background: var(--neon-pink);
+        color: #eee;
+        box-shadow: 0 0 20px var(--neon-pink);
+      }
 
       .opt-btn {
         width: 100%;
@@ -504,25 +540,9 @@
         <div id="options-container"></div>
       </div>
 
-      <div
-        id="screen-loading"
-        class="hidden"
-        style="width: 100%; text-align: center"
-      >
+      <div id="screen-loading" class="hidden">
         <div class="loader-circle"></div>
-        <div
-          style="
-            font-family: 'Black Ops One';
-            color: var(--neon-blue);
-            font-size: 4vw;
-            min-font-size: 14px;
-            letter-spacing: 4px;
-            margin-top: 20px;
-            text-shadow: 0 0 10px var(--neon-blue);
-          "
-        >
-          ANALYZING_DATA...
-        </div>
+        <div class="loading-text-main">ANALYZING_DATA...</div>
         <div
           style="
             font-family: 'DotGothic16';
@@ -847,29 +867,19 @@
         window.scrollTo({ top: 0, behavior: 'smooth' }); // 切換題目時滾動回頂部
       }
 
-      const loadingPhrases = [
-        'SCANNING_PADDLE_CORE...',
-        'DECODING_DINK_STRATEGY...',
-        'ANALYZING_SERVE_VELOCITY...',
-        'MATCHING_PRO_PLAYER_DNA...',
-        'FILTERING_TRASHTALK_DATA...',
-      ];
-
       function showResult() {
         // 1. 隱藏題目頁，顯示 Loading 頁
         document.getElementById('screen-quiz').classList.add('hidden');
         document.getElementById('screen-loading').classList.remove('hidden');
 
         // --- 加回動態切換 Loading 詞彙 ---
-        const loadingLabel = document.querySelector(
-          '#screen-loading div[style*="Black Ops One"]',
-        );
+        const loadingLabel = document.querySelector('.loading-text-main');
         const loadingPhrases = [
           'SCANNING_PADDLE_CORE...',
           'DECODING_DINK_STRATEGY...',
           'ANALYZING_SERVE_VELOCITY...',
           'MATCHING_PRO_PLAYER_DNA...',
-          'FILTERING_TRASH_TAL_DATA...',
+          'FILTERING_TRASH_TALK_DATA...',
           'SYNCING_NEON_VIBE...',
         ];
 
@@ -910,7 +920,7 @@
           } else {
             imgBorder.style.border = '3px solid var(--neon-blue)';
           }
-        }, 3600); // 3.6秒後進入結果畫面
+        }, 3600);
       }
 
       function toggleAudio() {
