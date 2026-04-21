@@ -37,11 +37,17 @@
         font-family: 'Noto Sans TC', sans-serif;
         display: flex;
         justify-content: center;
-        align-items: flex-start; /* 改為從頂部開始對齊，而不是置中 */
-        min-height: 100%; /* 改為 100% */
+        align-items: flex-start; /* 解決擠壓：從頂部對齊 */
+        min-height: 100dvh;
         width: 100vw;
-        overflow-x: hidden; /* 禁止橫向捲動 */
-        overflow-y: auto; /* 允許縱向捲動 */
+        overflow-x: hidden;
+        overflow-y: auto; /* 解決捲動：允許縱向滑動 */
+        background-image:
+          linear-gradient(45deg, #111 25%, transparent 25%),
+          linear-gradient(-45deg, #111 25%, transparent 25%),
+          linear-gradient(45deg, transparent 75%, #111 75%),
+          linear-gradient(-45deg, transparent 75%, #111 75%);
+        background-size: 4px 4px;
       }
 
       html {
@@ -52,12 +58,11 @@
       #game-container {
         width: 100%;
         max-width: 420px;
-        padding: 20px;
+        padding: 60px 20px 100px; /* 增加底部留白，避免 LINE 工具列擋住按鈕 */
         display: flex;
         flex-direction: column;
         align-items: center;
         min-height: 100dvh;
-        position: relative;
         box-sizing: border-box;
       }
 
@@ -70,23 +75,23 @@
         align-items: center;
       }
 
+      #screen-home,
       #screen-quiz,
       #screen-loading {
         width: 100%;
-        min-height: auto;
-        height: auto;
-        padding-top: 20dvh;
-        padding-bottom: 50px;
-        margin-top: 50px;
-      }
-
-      /* 建議加在 style 標籤內 */
-      #screen-loading {
+        /* 關鍵改動：給予一個最小高度，並利用 margin auto 置中 */
+        min-height: 60vh;
         display: flex;
         flex-direction: column;
-        align-items: center; /* 確保內容水平置中 */
-        justify-content: center;
-        text-align: center;
+        justify-content: center; /* 內容在容器內垂直置中 */
+        margin-top: auto; /* 這一組 auto margin 是垂直置中的魔法 */
+        margin-bottom: auto;
+      }
+
+      #screen-result {
+        width: 100%;
+        margin-top: 20px;
+        margin-bottom: 50px;
       }
 
       /* 針對那個動態文字的類別 (如果沒有類別可以補一個，或直接針對該結構) */
@@ -104,15 +109,6 @@
         display: flex;
         justify-content: center;
         align-items: center;
-      }
-
-      #screen-result {
-        width: 100%;
-        min-height: auto;
-        height: auto;
-        padding-top: 12vh;
-        padding-bottom: 60px;
-        margin-top: 30px;
       }
 
       /* 略過重複的 CSS 樣式... */
@@ -549,6 +545,8 @@
             color: #444;
             font-size: 0.8rem;
             margin-top: 10px;
+            text-align: center;
+            width: 100%;
           "
         >
           MATCHING_YOUR_SOUL_TYPE
