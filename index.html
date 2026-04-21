@@ -37,11 +37,10 @@
         font-family: 'Noto Sans TC', sans-serif;
         display: flex;
         justify-content: center;
-        align-items: flex-start; /* 改為頂部開始，利於滑動 */
+        align-items: center;
         min-height: 100dvh;
         width: 100vw;
-        overflow-x: hidden; /* 允許垂直滾動，禁止橫向 */
-        overflow-y: auto;
+        overflow: hidden;
         background-image:
           linear-gradient(45deg, #111 25%, transparent 25%),
           linear-gradient(-45deg, #111 25%, transparent 25%),
@@ -53,7 +52,7 @@
       #game-container {
         width: 100%;
         max-width: 420px;
-        padding: 40px 20px; /* 增加上下間距 */
+        padding: 20px;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -61,7 +60,6 @@
         min-height: 100dvh;
       }
 
-      /* 略過重複的 CSS 樣式... */
       .home-visual {
         display: flex;
         align-items: center;
@@ -111,6 +109,7 @@
           0 0 15px var(--neon-pink),
           0 0 30px var(--neon-pink);
       }
+
       .input-box-neon {
         border: 2px solid var(--neon-green);
         border-radius: 10px;
@@ -155,9 +154,12 @@
         position: relative;
         overflow: hidden;
       }
-      .btn-start:active {
-        transform: scale(0.95);
-      } /* 移動端點擊縮放 */
+      .btn-start:hover {
+        background: var(--neon-pink);
+        color: #fff;
+        box-shadow: 0 0 30px var(--neon-pink);
+        transform: scale(1.05);
+      }
 
       .opt-btn {
         width: 100%;
@@ -171,29 +173,23 @@
         cursor: pointer;
         border-radius: 4px;
         transition: 0.2s;
-        outline: none;
       }
-
-      /* 修正2: 觸碰效果 - 支援行動端點擊感 */
       .opt-btn:hover {
         border-color: var(--neon-blue);
         color: var(--neon-blue);
         transform: translateX(5px);
         background: rgba(0, 242, 255, 0.05);
       }
-      .opt-btn:active {
-        background: rgba(0, 242, 255, 0.2);
-        color: #fff;
-        transform: scale(0.98);
-      }
 
-      /* 略過重複的 Result 樣式... */
       .result-panel {
         width: 100%;
         background: rgba(20, 20, 20, 0.6);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
         border: 2px solid var(--neon-blue);
+        box-shadow:
+          0 0 25px rgba(0, 242, 255, 0.2),
+          inset 0 0 15px rgba(0, 242, 255, 0.1);
         border-radius: 12px;
         padding: 40px 20px 30px;
         text-align: center;
@@ -209,6 +205,7 @@
         background: var(--neon-blue);
         box-shadow: 0 0 20px var(--neon-blue);
       }
+
       .result-actions {
         position: absolute;
         top: 15px;
@@ -216,7 +213,6 @@
         display: flex;
         gap: 10px;
       }
-      /* --- 圖示按鈕基礎樣式 --- */
       .icon-btn {
         background: rgba(255, 255, 255, 0.1);
         border: 1px solid rgba(0, 242, 255, 0.5);
@@ -230,28 +226,24 @@
         cursor: pointer;
         transition: 0.3s;
       }
-
-      /* --- 一般圖示 Hover --- */
       .icon-btn:hover {
         background: var(--neon-blue);
         color: #000;
         box-shadow: 0 0 15px var(--neon-blue);
       }
-
-      /* --- 分享按鈕特殊顏色 --- */
       .icon-btn.share {
         border-color: var(--neon-green);
         color: var(--neon-green);
       }
-
-      /* --- 分享按鈕 Hover --- */
       .icon-btn.share:hover {
         background: var(--neon-green);
         color: #000;
         box-shadow: 0 0 15px var(--neon-green);
       }
-
-      /* 確保下方沒有多餘的大括號或漏掉的標點符號 */
+      .icon-btn svg {
+        width: 20px;
+        height: 20px;
+      }
 
       .res-name {
         font-size: 2.8rem;
@@ -262,6 +254,7 @@
           0 0 15px var(--neon-pink),
           0 0 30px var(--neon-pink);
       }
+
       .res-img-box {
         width: 180px;
         height: 180px;
@@ -269,12 +262,14 @@
         border-radius: 12px;
         margin: 0 auto 20px;
         overflow: hidden;
+        box-shadow: 0 0 20px rgba(224, 255, 0, 0.3);
       }
       .res-img-box img {
         width: 100%;
         height: 100%;
         object-fit: cover;
       }
+
       .info-container {
         background: rgba(255, 255, 255, 0.05);
         border: 1px solid rgba(188, 19, 254, 0.2);
@@ -283,6 +278,7 @@
         text-align: left;
         margin-top: 20px;
       }
+
       .info-item {
         display: flex;
         align-items: center;
@@ -299,6 +295,7 @@
         color: #eee;
         flex: 1;
       }
+
       #audio-ctrl {
         position: fixed;
         top: 15px;
@@ -312,6 +309,9 @@
         z-index: 100;
         cursor: pointer;
       }
+
+      /* Loading 旋轉圓圈 */
+      /* 修改後的 Loading 圓圈 */
       .loader-circle {
         width: 80px;
         height: 80px;
@@ -320,10 +320,11 @@
         border-top: 4px solid #ff2efd;
         border-right: 4px solid var(--neon-blue);
         border-radius: 50%;
-        animation: spin-neon 0.9s linear infinite;
+        animation: spin-neon 0.9s linear infinite; /* 稍微加快一點更帥 */
         filter: drop-shadow(0 0 8px #ff2efd)
           drop-shadow(0 0 2px var(--neon-blue));
       }
+
       @keyframes spin-neon {
         0% {
           transform: rotate(0deg);
@@ -332,62 +333,34 @@
           transform: rotate(360deg);
         }
       }
+
       #quote-container {
         margin: 25px 0;
         padding: 15px;
         background: rgba(255, 255, 255, 0.03);
         text-align: left;
         position: relative;
+        transition: border-color 0.5s ease;
         border-left: 2px solid var(--neon-blue);
         margin-top: 45px;
       }
+
       #result-quote {
         font-style: italic;
-        color: #fff;
+        color: #fff; /* 改成白色讓閱讀更舒服 */
         font-size: 0.85rem;
         line-height: 1.5;
         margin-bottom: 10px;
+        letter-spacing: 0.5px;
       }
+
       #result-author {
         font-family: 'Black Ops One';
         color: var(--neon-pink);
         font-size: 0.65rem;
         text-align: right;
-      }
-
-      /* 修正3: 用於長按儲存圖片的 Overlay */
-      #screenshot-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.9);
-        z-index: 200;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
-      }
-      #screenshot-overlay img {
-        max-width: 100%;
-        max-height: 80%;
-        border: 2px solid var(--neon-blue);
-        border-radius: 12px;
-      }
-      .overlay-tip {
-        color: #eee;
-        margin-top: 20px;
-        margin-bottom: 5px;
-        font-weight: bold;
-        text-align: center;
-      }
-      .close-overlay {
-        margin-top: 15px;
-        color: #fff;
-        text-decoration: underline;
-        cursor: pointer;
+        letter-spacing: 1px;
+        opacity: 0.8;
       }
     </style>
   </head>
@@ -470,7 +443,6 @@
         ></h2>
         <div id="options-container"></div>
       </div>
-
       <div
         id="screen-loading"
         class="hidden"
@@ -549,6 +521,7 @@
         >
           玩家代號：@ <span id="player-id-tag"></span>
         </div>
+
         <div class="res-img-box"><img id="result-img" src="" /></div>
         <div class="res-name" id="result-name"></div>
         <p
@@ -589,6 +562,7 @@
               font-size: 0.9rem;
               line-height: 1.4;
               margin-bottom: 8px;
+              text-shadow: 0 0 5px rgba(0, 242, 255, 0.3);
             "
           ></div>
           <div
@@ -598,6 +572,7 @@
               color: var(--neon-pink);
               font-size: 0.7rem;
               text-align: right;
+              letter-spacing: 1px;
             "
           ></div>
         </div>
@@ -617,21 +592,7 @@
       </div>
     </div>
 
-    <div id="screenshot-overlay" class="hidden">
-      <div class="overlay-tip">長按圖片即可儲存至相簿</div>
-      <img id="screenshot-img" src="" alt="result" />
-      <div
-        class="close-overlay"
-        onclick="
-          document.getElementById('screenshot-overlay').classList.add('hidden')
-        "
-      >
-        關閉預覽
-      </div>
-    </div>
-
     <script>
-      // 略過原有資料 (保持不變) ...
       const questions = [
         {
           q: '在平日的打球時段，你最喜歡去哪種球場？',
@@ -654,7 +615,7 @@
         {
           q: '網前 Dink 對戰：你在網前被對手一直打 Soft Dink，你會？',
           options: [
-            { text: '穩住節節，跟他慢慢磨耐心', score: 'monk' },
+            { text: '穩住節奏，跟他慢慢磨耐心', score: 'monk' },
             { text: '等待一球發力的時機，搶贏先機', score: 'tornado' },
             { text: '配合假動作，變幻球路，打亂局面', score: 'wand' },
             { text: '觀察他的擊球路徑，冷靜回防', score: 'nerd' },
@@ -697,7 +658,6 @@
           ],
         },
       ];
-
       const resultData = {
         monk: {
           name: '禪師',
@@ -796,7 +756,6 @@
           const b = document.createElement('button');
           b.className = 'opt-btn';
           b.innerText = o.text;
-          // 修正2: 確保移動端點擊有反應
           b.onclick = () => {
             finalScores[o.score]++;
             currentStep++;
@@ -805,7 +764,6 @@
           };
           container.appendChild(b);
         });
-        window.scrollTo({ top: 0, behavior: 'smooth' }); // 切換題目時滾動回頂部
       }
 
       const loadingPhrases = [
@@ -822,7 +780,7 @@
         document.getElementById('screen-quiz').classList.add('hidden');
         document.getElementById('screen-loading').classList.remove('hidden');
 
-        // --- 加回動態切換 Loading 詞彙 ---
+        // --- 動態切換 Loading 詞彙 ---
         const loadingLabel = document.querySelector(
           '#screen-loading div[style*="Black Ops One"]',
         );
@@ -831,7 +789,7 @@
           'DECODING_DINK_STRATEGY...',
           'ANALYZING_SERVE_VELOCITY...',
           'MATCHING_PRO_PLAYER_DNA...',
-          'FILTERING_TRASH_TAL_DATA...',
+          'FILTERING_TRASH_TALK_DATA...',
           'SYNCING_NEON_VIBE...',
         ];
 
@@ -841,9 +799,9 @@
             loadingPhrases[Math.floor(Math.random() * loadingPhrases.length)];
         }, 1200);
 
-        // 2. 延遲後顯示結果
+        // 2. 三秒後顯示結果
         setTimeout(() => {
-          clearInterval(phraseInterval); // 停止文字切換
+          clearInterval(phraseInterval);
 
           let res = Object.keys(finalScores).reduce((a, b) =>
             finalScores[a] > finalScores[b] ? a : b,
@@ -852,8 +810,25 @@
 
           document.getElementById('screen-loading').classList.add('hidden');
           document.getElementById('screen-result').classList.remove('hidden');
+          //border: 3px solid var(--neon-green);
+          const quoteBox = document.getElementById('quote-container');
+          const imgBorder = document.getElementsByClassName('res-img-box')[0];
+          if (res === 'ghost' || res === 'tornado') {
+            quoteBox.style.borderLeftColor = 'var(--neon-pink)';
+            quoteBox.style.background = 'rgba(255, 0, 255, 0.05)';
+            imgBorder.style.border = '3px solid var(--neon-pink)';
+            imgBorder.style.boxShadow = '0 0 20px rgba(255, 0, 255, 0.3)';
+          } else if (res === 'butterfly') {
+            quoteBox.style.borderLeftColor = 'var(--neon-green)';
+            quoteBox.style.background = 'rgba(224, 255, 0, 0.05)';
+          } else {
+            quoteBox.style.borderLeftColor = 'var(--neon-blue)';
+            quoteBox.style.background = 'rgba(0, 242, 255, 0.05)';
+            imgBorder.style.border = '3px solid var(--neon-blue)';
+            imgBorder.style.boxShadow = '0 0 20px rgba(0, 242, 255, 0.3)';
+          }
 
-          // --- 渲染資料 ---
+          // --- 資料渲染 ---
           document.getElementById('player-id-display').innerText = playerName;
           document.getElementById('player-id-tag').innerText = playerName;
           document.getElementById('result-name').innerText = d.name;
@@ -861,18 +836,12 @@
           document.getElementById('result-desc').innerHTML = d.desc;
           document.getElementById('result-mate').innerText = d.mate;
           document.getElementById('result-enemy').innerText = d.enemy;
+
+          // 名言與致敬作者
           document.getElementById('result-quote').innerText = d.quote;
           document.getElementById('result-author').innerText =
             `-- inspired by player ${d.author.toUpperCase()}`;
-
-          // 切換邊框顏色 (根據結果賦予不同霓虹色)
-          const imgBorder = document.getElementsByClassName('res-img-box')[0];
-          if (res === 'ghost' || res === 'tornado') {
-            imgBorder.style.border = '3px solid var(--neon-pink)';
-          } else {
-            imgBorder.style.border = '3px solid var(--neon-blue)';
-          }
-        }, 3600); // 3.6秒後進入結果畫面
+        }, 3600);
       }
 
       function toggleAudio() {
@@ -887,41 +856,47 @@
         }
       }
 
-      // 修正3: 下載/儲存截圖邏輯
       function downloadScreenshot() {
         const target = document.getElementById('screen-result');
-        const actions = target.querySelector('.result-actions');
-        const retestBtn = target.querySelector('button.btn-start');
+        const buttons = target.querySelectorAll('button, .result-actions');
 
-        // 暫時隱藏按鈕避免入鏡
-        actions.style.visibility = 'hidden';
-        retestBtn.style.visibility = 'hidden';
+        // 隱藏按鈕
+        buttons.forEach((b) => (b.style.visibility = 'hidden'));
 
         html2canvas(target, {
-          backgroundColor: '#050505',
-          scale: 2,
+          backgroundColor: '#050505', // 確保卡片外部是乾淨的黑色
+          scale: 3, // 保持高质量
           useCORS: true,
+          // 關鍵修正：克隆出的 DOM 用來專門生成乾淨的截圖
           onclone: (clonedDoc) => {
             const clonedTarget = clonedDoc.getElementById('screen-result');
+
+            // 1. 保留邊線 (Border)
+            clonedTarget.style.border = '2px solid var(--neon-blue)';
+
+            // 2. 徹底移除外陰影和內陰影 (拿掉那一層粗邊)
             clonedTarget.style.boxShadow = 'none';
+
+            // 3. 移除濾鏡，確保卡片邊緣乾淨不抓到背景點點
+            clonedTarget.style.backdropFilter = 'none';
+            clonedTarget.style.webkitBackdropFilter = 'none';
+
+            // 4. 給予實色深灰色背景 (因為拿掉了透明和模糊)
             clonedTarget.style.background = '#101010';
+            clonedTarget.style.borderRadius = '12px'; // 保持圓角
           },
         }).then((canvas) => {
-          actions.style.visibility = 'visible';
-          retestBtn.style.visibility = 'visible';
-
-          // 核心解決方案：彈出一個 Overlay 讓使用者長按圖片儲存
-          const imgUrl = canvas.toDataURL('image/png');
-          document.getElementById('screenshot-img').src = imgUrl;
-          document
-            .getElementById('screenshot-overlay')
-            .classList.remove('hidden');
+          buttons.forEach((b) => (b.style.visibility = 'visible'));
+          const link = document.createElement('a');
+          link.download = `PCKL_REPORT_${playerName}.png`;
+          link.href = canvas.toDataURL('image/png');
+          link.click();
         });
       }
 
       async function shareToFriends() {
         const shareData = {
-          title: 'PCKL測驗結果',
+          title: 'PCKL // MANIAC LABS 測驗結果',
           text: `我是 ${playerName}，我在 Pickleball 測驗中獲得了「${document.getElementById('result-name').innerText}」稱號！`,
           url: window.location.href,
         };
