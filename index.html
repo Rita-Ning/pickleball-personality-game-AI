@@ -1,0 +1,912 @@
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Pickleball Test</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=DotGothic16&family=Noto+Sans+TC:wght@300;400;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+      :root {
+        --neon-green: #e0ff00;
+        --neon-blue: #00f2ff;
+        --neon-pink: #ff00ff;
+        --neon-purple: #bc13fe;
+        --dark-bg: #050505;
+      }
+
+      * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .hidden {
+        display: none !important;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: var(--dark-bg);
+        color: #fff;
+        font-family: 'Noto Sans TC', sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100dvh;
+        width: 100vw;
+        overflow: hidden;
+        background-image:
+          linear-gradient(45deg, #111 25%, transparent 25%),
+          linear-gradient(-45deg, #111 25%, transparent 25%),
+          linear-gradient(45deg, transparent 75%, #111 75%),
+          linear-gradient(-45deg, transparent 75%, #111 75%);
+        background-size: 4px 4px;
+      }
+
+      #game-container {
+        width: 100%;
+        max-width: 420px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100dvh;
+      }
+
+      .home-visual {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 40px;
+      }
+      .css-paddle {
+        width: 60px;
+        height: 100px;
+        position: relative;
+        filter: drop-shadow(0 0 10px var(--neon-green));
+        margin-bottom: 20px;
+      }
+      .paddle-head {
+        width: 100%;
+        height: 75px;
+        border: 3px solid var(--neon-green);
+        border-radius: 15px 15px 5px 5px;
+        background: rgba(224, 255, 0, 0.05);
+      }
+      .paddle-handle {
+        width: 12px;
+        height: 25px;
+        border: 2px solid var(--neon-green);
+        margin: 0 auto;
+        background: var(--dark-bg);
+      }
+      .title-pckl {
+        font-family: 'Black Ops One';
+        font-size: 3.5rem;
+        line-height: 0.9;
+        color: transparent;
+        -webkit-text-stroke: 2px var(--neon-blue);
+        text-shadow: 0 0 10px var(--neon-blue);
+      }
+      .title-edition {
+        font-family: 'Black Ops One';
+        font-size: 0.8rem;
+        color: var(--neon-pink);
+        margin: 5px 0;
+      }
+      .title-maniac {
+        font-family: 'Black Ops One';
+        font-size: 3rem;
+        color: #fff;
+        text-shadow:
+          0 0 15px var(--neon-pink),
+          0 0 30px var(--neon-pink);
+      }
+
+      .input-box-neon {
+        border: 2px solid var(--neon-green);
+        border-radius: 10px;
+        padding: 20px;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        box-shadow: 0 0 20px rgba(224, 255, 0, 0.2);
+      }
+      .input-label {
+        font-weight: 900;
+        color: #fff;
+        font-size: 1rem;
+        margin-bottom: 10px;
+        display: block;
+      }
+      .cyber-input {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--neon-green);
+        border-radius: 5px;
+        width: 100%;
+        padding: 10px;
+        color: var(--neon-blue);
+        font-family: 'Black Ops One';
+        font-size: 1.5rem;
+        text-align: center;
+        outline: none;
+      }
+
+      .btn-start {
+        border: 2px solid var(--neon-pink);
+        color: var(--neon-pink);
+        background: transparent;
+        font-family: 'Black Ops One';
+        font-size: 1.5rem;
+        padding: 10px 40px;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-top: 25px;
+        transition: all 0.3s ease;
+        text-shadow: 0 0 10px var(--neon-pink);
+        box-shadow: 0 0 15px rgba(255, 0, 255, 0.2);
+        position: relative;
+        overflow: hidden;
+      }
+      .btn-start:hover {
+        background: var(--neon-pink);
+        color: #fff;
+        box-shadow: 0 0 30px var(--neon-pink);
+        transform: scale(1.05);
+      }
+
+      .opt-btn {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 16px;
+        margin-bottom: 12px;
+        color: #ccc;
+        text-align: left;
+        font-size: 0.95rem;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: 0.2s;
+      }
+      .opt-btn:hover {
+        border-color: var(--neon-blue);
+        color: var(--neon-blue);
+        transform: translateX(5px);
+        background: rgba(0, 242, 255, 0.05);
+      }
+
+      .result-panel {
+        width: 100%;
+        background: rgba(20, 20, 20, 0.6);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 2px solid var(--neon-blue);
+        box-shadow:
+          0 0 25px rgba(0, 242, 255, 0.2),
+          inset 0 0 15px rgba(0, 242, 255, 0.1);
+        border-radius: 12px;
+        padding: 40px 20px 30px;
+        text-align: center;
+        position: relative;
+      }
+      .panel-header-beam {
+        position: absolute;
+        top: -4px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 50%;
+        height: 4px;
+        background: var(--neon-blue);
+        box-shadow: 0 0 20px var(--neon-blue);
+      }
+
+      .result-actions {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        display: flex;
+        gap: 10px;
+      }
+      .icon-btn {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(0, 242, 255, 0.5);
+        color: var(--neon-blue);
+        width: 38px;
+        height: 38px;
+        border-radius: 6px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .icon-btn:hover {
+        background: var(--neon-blue);
+        color: #000;
+        box-shadow: 0 0 15px var(--neon-blue);
+      }
+      .icon-btn.share {
+        border-color: var(--neon-green);
+        color: var(--neon-green);
+      }
+      .icon-btn.share:hover {
+        background: var(--neon-green);
+        color: #000;
+        box-shadow: 0 0 15px var(--neon-green);
+      }
+      .icon-btn svg {
+        width: 20px;
+        height: 20px;
+      }
+
+      .res-name {
+        font-size: 2.8rem;
+        font-weight: 900;
+        color: #fff;
+        margin: 15px 0;
+        text-shadow:
+          0 0 15px var(--neon-pink),
+          0 0 30px var(--neon-pink);
+      }
+
+      .res-img-box {
+        width: 180px;
+        height: 180px;
+        border: 3px solid var(--neon-green);
+        border-radius: 12px;
+        margin: 0 auto 20px;
+        overflow: hidden;
+        box-shadow: 0 0 20px rgba(224, 255, 0, 0.3);
+      }
+      .res-img-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .info-container {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(188, 19, 254, 0.2);
+        border-radius: 8px;
+        padding: 15px;
+        text-align: left;
+        margin-top: 20px;
+      }
+
+      .info-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+      }
+      .info-label {
+        width: 80px;
+        color: #eee;
+        font-weight: 900;
+        margin-right: 3px;
+      }
+      .info-val {
+        color: #eee;
+        flex: 1;
+      }
+
+      #audio-ctrl {
+        position: fixed;
+        top: 15px;
+        right: 15px;
+        background: rgba(0, 0, 0, 0.5);
+        border: 1px solid var(--neon-blue);
+        color: var(--neon-blue);
+        font-size: 0.7rem;
+        padding: 6px 12px;
+        border-radius: 4px;
+        z-index: 100;
+        cursor: pointer;
+      }
+
+      /* Loading 旋轉圓圈 */
+      /* 修改後的 Loading 圓圈 */
+      .loader-circle {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto;
+        border: 4px solid rgba(255, 255, 255, 0.05);
+        border-top: 4px solid #ff2efd;
+        border-right: 4px solid var(--neon-blue);
+        border-radius: 50%;
+        animation: spin-neon 0.9s linear infinite; /* 稍微加快一點更帥 */
+        filter: drop-shadow(0 0 8px #ff2efd)
+          drop-shadow(0 0 2px var(--neon-blue));
+      }
+
+      @keyframes spin-neon {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      #quote-container {
+        margin: 25px 0;
+        padding: 15px;
+        background: rgba(255, 255, 255, 0.03);
+        text-align: left;
+        position: relative;
+        transition: border-color 0.5s ease;
+        border-left: 2px solid var(--neon-blue);
+        margin-top: 45px;
+      }
+
+      #result-quote {
+        font-style: italic;
+        color: #fff; /* 改成白色讓閱讀更舒服 */
+        font-size: 0.85rem;
+        line-height: 1.5;
+        margin-bottom: 10px;
+        letter-spacing: 0.5px;
+      }
+
+      #result-author {
+        font-family: 'Black Ops One';
+        color: var(--neon-pink);
+        font-size: 0.65rem;
+        text-align: right;
+        letter-spacing: 1px;
+        opacity: 0.8;
+      }
+    </style>
+  </head>
+  <body>
+    <audio id="bgMusic" loop>
+      <source src="bg_music.mp3" type="audio/mpeg" />
+    </audio>
+    <button id="audio-ctrl" onclick="toggleAudio()">MUTE</button>
+
+    <div id="game-container">
+      <div
+        id="screen-home"
+        style="
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        "
+      >
+        <div class="home-visual">
+          <div class="css-paddle">
+            <div class="paddle-head"></div>
+            <div class="paddle-handle"></div>
+          </div>
+          <div class="title-text-group">
+            <div class="title-pckl">Pickleball</div>
+            <div class="title-maniac">MANIAC</div>
+            <div class="title-edition">Vibe / Check // Neon Edition</div>
+          </div>
+        </div>
+        <div class="input-box-neon">
+          <span class="input-label">INPUT PLAYER ID</span>
+          <input
+            type="text"
+            id="playerName"
+            class="cyber-input"
+            placeholder="Your_ID"
+            maxlength="12"
+          />
+        </div>
+        <button class="btn-start" onclick="startQuiz()">START</button>
+      </div>
+
+      <div
+        id="screen-quiz"
+        class="hidden"
+        style="
+          width: 100%;
+          border: 2px solid var(--neon-blue);
+          padding: 25px;
+          border-radius: 12px;
+          background: rgba(0, 0, 0, 0.6);
+          backdrop-filter: blur(10px);
+        "
+      >
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+          "
+        >
+          <div
+            id="step-id"
+            style="
+              font-family: 'Black Ops One';
+              color: var(--neon-pink);
+              font-size: 1.5rem;
+            "
+          >
+            01
+          </div>
+          <div style="font-size: 0.7rem; color: #555; letter-spacing: 1px">
+            DECODING_DATA...
+          </div>
+        </div>
+        <h2
+          id="question-text"
+          style="font-size: 1.2rem; margin-bottom: 25px; font-weight: 400"
+        ></h2>
+        <div id="options-container"></div>
+      </div>
+      <div
+        id="screen-loading"
+        class="hidden"
+        style="width: 100%; text-align: center"
+      >
+        <div class="loader-circle"></div>
+        <div
+          style="
+            font-family: 'Black Ops One';
+            color: var(--neon-blue);
+            font-size: 1.2rem;
+            letter-spacing: 4px;
+            margin-top: 20px;
+            text-shadow: 0 0 10px var(--neon-blue);
+          "
+        >
+          ANALYZING_DATA...
+        </div>
+        <div
+          style="
+            font-family: 'DotGothic16';
+            color: #444;
+            font-size: 0.8rem;
+            margin-top: 10px;
+          "
+        >
+          MATCHING_YOUR_SOUL_TYPE
+        </div>
+      </div>
+
+      <div id="screen-result" class="hidden result-panel">
+        <div class="panel-header-beam"></div>
+        <div class="result-actions">
+          <button class="icon-btn" onclick="downloadScreenshot()">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"
+              />
+            </svg>
+          </button>
+          <button class="icon-btn share" onclick="shareToFriends()">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M16 6l-4-4-4 4M12 2v13"
+              />
+            </svg>
+          </button>
+        </div>
+        <div
+          style="
+            font-family: 'DotGothic16';
+            color: #555;
+            font-size: 0.7rem;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+          "
+        >
+          REPORT_ID // @ <span id="player-id-display"></span>
+        </div>
+        <div
+          style="
+            color: var(--neon-green);
+            font-weight: 1000;
+            margin-bottom: 15px;
+          "
+        >
+          玩家代號：@ <span id="player-id-tag"></span>
+        </div>
+
+        <div class="res-img-box"><img id="result-img" src="" /></div>
+        <div class="res-name" id="result-name"></div>
+        <p
+          id="result-desc"
+          style="
+            font-size: 0.95rem;
+            color: #bbb;
+            line-height: 1.6;
+            margin-bottom: 20px;
+          "
+        ></p>
+        <div class="info-container">
+          <div class="info-item">
+            <div class="info-label">✨ 最佳戰友</div>
+            <div id="result-mate" class="info-val"></div>
+          </div>
+          <div
+            class="info-item"
+            style="
+              border-top: 1px solid rgba(255, 255, 255, 0.1);
+              padding-top: 8px;
+              margin-top: 8px;
+            "
+          >
+            <div class="info-label">✨ 宿命死敵</div>
+            <div id="result-enemy" class="info-val"></div>
+          </div>
+        </div>
+        <div
+          id="quote-container"
+          style="margin: 20px 0; padding: 0 15px; min-height: 80px"
+        >
+          <div
+            id="result-quote"
+            style="
+              font-style: italic;
+              color: var(--neon-blue);
+              font-size: 0.9rem;
+              line-height: 1.4;
+              margin-bottom: 8px;
+              text-shadow: 0 0 5px rgba(0, 242, 255, 0.3);
+            "
+          ></div>
+          <div
+            id="result-author"
+            style="
+              font-family: 'Black Ops One';
+              color: var(--neon-pink);
+              font-size: 0.7rem;
+              text-align: right;
+              letter-spacing: 1px;
+            "
+          ></div>
+        </div>
+        <button
+          class="btn-start"
+          onclick="location.reload()"
+          style="
+            font-size: 1rem;
+            width: 100%;
+            border-color: var(--neon-purple);
+            color: #fff;
+            margin-top: 5px;
+          "
+        >
+          RETEST
+        </button>
+      </div>
+    </div>
+
+    <script>
+      const questions = [
+        {
+          q: '在平日的打球時段，你最喜歡去哪種球場？',
+          options: [
+            { text: '有專業室內地版的球場，設備參數最重要', score: 'nerd' },
+            { text: '熱鬧的公園露天場，人多才好玩', score: 'butterfly' },
+            { text: '安靜隱密的私人場，適合專注練球', score: 'monk' },
+            { text: '只要能讓我大殺四方的球場就行', score: 'tornado' },
+          ],
+        },
+        {
+          q: '關於匹克球拍，你選購時最看重的是什麼？',
+          options: [
+            { text: '極致的手感回饋與控制力', score: 'ghost' },
+            { text: '強大的擊球初速與破壞力', score: 'tornado' },
+            { text: '外觀設計與穿搭的潮流感', score: 'wand' },
+            { text: '炭纖維科技與平衡指標參數', score: 'nerd' },
+          ],
+        },
+        {
+          q: '網前 Dink 對戰：你在網前被對手一直打 Soft Dink，你會？',
+          options: [
+            { text: '穩住節奏，跟他慢慢磨耐心', score: 'monk' },
+            { text: '等待一球發力的時機，搶贏先機', score: 'tornado' },
+            { text: '配合假動作，變幻球路，打亂局面', score: 'wand' },
+            { text: '觀察他的擊球路徑，冷靜回防', score: 'nerd' },
+          ],
+        },
+        {
+          q: '雙打時隊友今天狀態極差一直失誤，你會？',
+          options: [
+            { text: '放棄這局，內心偷偷覺得衰', score: 'wand' },
+            { text: '自己多扛一點，試圖接管戰局', score: 'tornado' },
+            { text: '帶點節奏回來，用開玩笑舒緩壓力', score: 'butterfly' },
+            { text: '分析他失誤的原因並提供建議', score: 'nerd' },
+          ],
+        },
+        {
+          q: '比分來到 Deuce (平分) 賽末點關鍵球，你會？',
+          options: [
+            { text: '保守穩打，等對手自己失誤', score: 'monk' },
+            { text: '拼盡全力，大膽冒險', score: 'tornado' },
+            { text: '拿出隱藏招式，打一個預期之外的球', score: 'wand' },
+            { text: '內心冷靜分析，準備致命一擊', score: 'ghost' },
+          ],
+        },
+        {
+          q: '結束了三小時激烈的對戰，這時候你第一件會做的事是？',
+          options: [
+            { text: '坐下來回想剛才的戰術失誤', score: 'nerd' },
+            { text: '立刻問大家：等下要吃什麼？', score: 'butterfly' },
+            { text: '獨自拉筋，恢復內心的平靜', score: 'monk' },
+            { text: '眼神冷酷地開始尋找下個對手', score: 'ghost' },
+          ],
+        },
+        {
+          q: '如果球友找你打一場「有賭注」的對決，你會賭什麼？',
+          options: [
+            { text: '輸的人當場做 20 下伏地挺身', score: 'monk' },
+            { text: '輸的人等下飯錢或飲料全包', score: 'butterfly' },
+            { text: '誰輸了直接現場喝一杯！', score: 'wand' },
+            { text: '賭什麼我都敢，反正我會贏', score: 'ghost' },
+          ],
+        },
+      ];
+      const resultData = {
+        monk: {
+          name: '禪師',
+          desc: '你是球場上的禪師。不論環境如何混亂，你始終保持自己的防守節奏。你打的不是球，是修行。',
+          mate: '重砲獵手',
+          enemy: '幻影術士',
+          img: 'result1.png',
+          author: 'Catherine Parenteau',
+          quote:
+            'Stay present in every point; the past is gone, the next dink is everything.',
+        },
+        tornado: {
+          name: '重砲獵手',
+          desc: '力量就是正義。你的字典裡沒有「防守」，只有「擊潰」。<br>對手在你面前會感受到物理上的壓迫感。',
+          mate: '禪師',
+          enemy: '數據怪傑',
+          img: 'result2.png',
+          author: 'Tyson McGuffin',
+          quote:
+            "If you have a chance to put the ball away, don't hesitate. Power is a mindset.",
+        },
+        nerd: {
+          name: '數據怪傑',
+          desc: '數據驅動者。你了解球拍的每一根纖維。<br>你打的是物理力學與機率，不是匹克球。',
+          mate: '任何聽你分析的人',
+          enemy: '直覺系天才',
+          img: 'result3.png',
+          author: 'Zane Navratil',
+          quote:
+            'Pickleball is a game of percentages. Master the math, master the court.',
+        },
+        butterfly: {
+          name: '球場交際花',
+          desc: '你是球場的快樂噴泉。如果打球不能交朋友<br>那贏球也沒意義。',
+          mate: '會找餐廳的朋友',
+          enemy: '嚴肅魔人',
+          img: 'result4.png',
+          author: 'Callie Smith',
+          quote:
+            "The best part of this game isn't the trophy, it's the community we build.",
+        },
+        wand: {
+          name: '幻影術士',
+          desc: '幻影魔術師。假動作的大師。你的球路連隊友都抓不到，對手抓狂是你最大的樂趣。',
+          mate: '心臟強大的隊友',
+          enemy: '禪師',
+          img: 'result5.png',
+          author: 'JW Johnson',
+          quote:
+            'Let your paddle do the talking. Speed up when they least expect it.',
+        },
+        ghost: {
+          name: '虛空幽靈',
+          desc: '隱藏類型。動作極簡卻致命，代表了匹克球的極致冷酷。你就是球場上的最終 Boss。',
+          mate: '你自己',
+          enemy: '另一個幽靈',
+          img: 'result6.png',
+          author: 'Ben Johns',
+          quote:
+            "Silence is the ultimate weapon. Be so good they can't ignore your quiet dominance.",
+        },
+      };
+
+      let currentStep = 0,
+        playerName = '',
+        finalScores = {
+          monk: 0,
+          tornado: 0,
+          nerd: 0,
+          butterfly: 0,
+          wand: 0,
+          ghost: 0,
+        };
+
+      function startQuiz() {
+        playerName =
+          document.getElementById('playerName').value.trim() || '神秘球員';
+        document.getElementById('screen-home').classList.add('hidden');
+        document.getElementById('screen-quiz').classList.remove('hidden');
+        loadQuestion();
+        document
+          .getElementById('bgMusic')
+          .play()
+          .catch(() => {});
+      }
+
+      function loadQuestion() {
+        const q = questions[currentStep];
+        document.getElementById('step-id').innerText = (currentStep + 1)
+          .toString()
+          .padStart(2, '0');
+        document.getElementById('question-text').innerText = q.q;
+        const container = document.getElementById('options-container');
+        container.innerHTML = '';
+        q.options.forEach((o) => {
+          const b = document.createElement('button');
+          b.className = 'opt-btn';
+          b.innerText = o.text;
+          b.onclick = () => {
+            finalScores[o.score]++;
+            currentStep++;
+            if (currentStep < 7) loadQuestion();
+            else showResult();
+          };
+          container.appendChild(b);
+        });
+      }
+
+      const loadingPhrases = [
+        'SCANNING_PADDLE_CORE...',
+        'DECODING_DINK_STRATEGY...',
+        'ANALYZING_SERVE_VELOCITY...',
+        'CALCULATING_KITCHEN_PROXIMITY..',
+        'MATCHING_PRO_PLAYER_DNA...',
+        'FILTERING_TRASH_TALK_DATA...',
+      ];
+
+      function showResult() {
+        // 1. 隱藏題目頁，顯示 Loading 頁
+        document.getElementById('screen-quiz').classList.add('hidden');
+        document.getElementById('screen-loading').classList.remove('hidden');
+
+        // --- 動態切換 Loading 詞彙 ---
+        const loadingLabel = document.querySelector(
+          '#screen-loading div[style*="Black Ops One"]',
+        );
+        const loadingPhrases = [
+          'SCANNING_PADDLE_CORE...',
+          'DECODING_DINK_STRATEGY...',
+          'ANALYZING_SERVE_VELOCITY...',
+          'MATCHING_PRO_PLAYER_DNA...',
+          'FILTERING_TRASH_TALK_DATA...',
+          'SYNCING_NEON_VIBE...',
+        ];
+
+        let phraseIndex = 0;
+        const phraseInterval = setInterval(() => {
+          loadingLabel.innerText =
+            loadingPhrases[Math.floor(Math.random() * loadingPhrases.length)];
+        }, 1200);
+
+        // 2. 三秒後顯示結果
+        setTimeout(() => {
+          clearInterval(phraseInterval);
+
+          let res = Object.keys(finalScores).reduce((a, b) =>
+            finalScores[a] > finalScores[b] ? a : b,
+          );
+          const d = resultData[res];
+
+          document.getElementById('screen-loading').classList.add('hidden');
+          document.getElementById('screen-result').classList.remove('hidden');
+          //border: 3px solid var(--neon-green);
+          const quoteBox = document.getElementById('quote-container');
+          const imgBorder = document.getElementsByClassName('res-img-box')[0];
+          if (res === 'ghost' || res === 'tornado') {
+            quoteBox.style.borderLeftColor = 'var(--neon-pink)';
+            quoteBox.style.background = 'rgba(255, 0, 255, 0.05)';
+            imgBorder.style.border = '3px solid var(--neon-pink)';
+            imgBorder.style.boxShadow = '0 0 20px rgba(255, 0, 255, 0.3)';
+          } else if (res === 'butterfly') {
+            quoteBox.style.borderLeftColor = 'var(--neon-green)';
+            quoteBox.style.background = 'rgba(224, 255, 0, 0.05)';
+          } else {
+            quoteBox.style.borderLeftColor = 'var(--neon-blue)';
+            quoteBox.style.background = 'rgba(0, 242, 255, 0.05)';
+            imgBorder.style.border = '3px solid var(--neon-blue)';
+            imgBorder.style.boxShadow = '0 0 20px rgba(0, 242, 255, 0.3)';
+          }
+
+          // --- 資料渲染 ---
+          document.getElementById('player-id-display').innerText = playerName;
+          document.getElementById('player-id-tag').innerText = playerName;
+          document.getElementById('result-name').innerText = d.name;
+          document.getElementById('result-img').src = d.img;
+          document.getElementById('result-desc').innerHTML = d.desc;
+          document.getElementById('result-mate').innerText = d.mate;
+          document.getElementById('result-enemy').innerText = d.enemy;
+
+          // 名言與致敬作者
+          document.getElementById('result-quote').innerText = d.quote;
+          document.getElementById('result-author').innerText =
+            `-- inspired by player ${d.author.toUpperCase()}`;
+        }, 3600);
+      }
+
+      function toggleAudio() {
+        const m = document.getElementById('bgMusic'),
+          btn = document.getElementById('audio-ctrl');
+        if (m.paused) {
+          m.play();
+          btn.innerText = 'PLAYING';
+        } else {
+          m.pause();
+          btn.innerText = 'MUTE';
+        }
+      }
+
+      function downloadScreenshot() {
+        const target = document.getElementById('screen-result');
+        const buttons = target.querySelectorAll('button, .result-actions');
+
+        // 隱藏按鈕
+        buttons.forEach((b) => (b.style.visibility = 'hidden'));
+
+        html2canvas(target, {
+          backgroundColor: '#050505', // 確保卡片外部是乾淨的黑色
+          scale: 3, // 保持高质量
+          useCORS: true,
+          // 關鍵修正：克隆出的 DOM 用來專門生成乾淨的截圖
+          onclone: (clonedDoc) => {
+            const clonedTarget = clonedDoc.getElementById('screen-result');
+
+            // 1. 保留邊線 (Border)
+            clonedTarget.style.border = '2px solid var(--neon-blue)';
+
+            // 2. 徹底移除外陰影和內陰影 (拿掉那一層粗邊)
+            clonedTarget.style.boxShadow = 'none';
+
+            // 3. 移除濾鏡，確保卡片邊緣乾淨不抓到背景點點
+            clonedTarget.style.backdropFilter = 'none';
+            clonedTarget.style.webkitBackdropFilter = 'none';
+
+            // 4. 給予實色深灰色背景 (因為拿掉了透明和模糊)
+            clonedTarget.style.background = '#101010';
+            clonedTarget.style.borderRadius = '12px'; // 保持圓角
+          },
+        }).then((canvas) => {
+          buttons.forEach((b) => (b.style.visibility = 'visible'));
+          const link = document.createElement('a');
+          link.download = `PCKL_REPORT_${playerName}.png`;
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+        });
+      }
+
+      async function shareToFriends() {
+        const shareData = {
+          title: 'PCKL // MANIAC LABS 測驗結果',
+          text: `我是 ${playerName}，我在 Pickleball 測驗中獲得了「${document.getElementById('result-name').innerText}」稱號！`,
+          url: window.location.href,
+        };
+        try {
+          if (navigator.share) await navigator.share(shareData);
+          else alert('請複製網址：' + window.location.href);
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    </script>
+  </body>
+</html>
