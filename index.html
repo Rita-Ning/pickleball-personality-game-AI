@@ -238,17 +238,21 @@
         outline: none;
       }
 
-      /* 修正2: 觸碰效果 - 支援行動端點擊感 */
-      .opt-btn:hover {
-        border-color: var(--neon-blue);
-        color: var(--neon-blue);
-        transform: translateX(5px);
-        background: rgba(0, 242, 255, 0.05);
+      @media (hover: hover) {
+        .opt-btn:hover {
+          border-color: var(--neon-blue);
+          color: var(--neon-blue);
+          transform: translateX(5px);
+          background: rgba(0, 242, 255, 0.05);
+        }
       }
+
+      /* 針對所有裝置（含手機）的點擊瞬時效果，請改用 :active */
       .opt-btn:active {
         background: rgba(0, 242, 255, 0.2);
         color: #fff;
         transform: scale(0.98);
+        transition: 0.1s; /* 讓點擊反應更快一點 */
       }
 
       /* 略過重複的 Result 樣式... */
