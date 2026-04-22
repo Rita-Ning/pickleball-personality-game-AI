@@ -189,6 +189,7 @@
         outline: none;
       }
 
+      /* START 與 RETEST 按鈕統一處理 */
       .btn-start {
         border: 2px solid var(--neon-pink);
         color: var(--neon-pink);
@@ -199,26 +200,39 @@
         border-radius: 8px;
         cursor: pointer;
         margin-top: 25px;
-        transition: all 0.3s ease;
         text-shadow: 0 0 10px var(--neon-pink);
         box-shadow: 0 0 15px rgba(255, 0, 255, 0.2);
         position: relative;
         overflow: hidden;
-      }
-      .btn-start:active {
-        transform: scale(0.95);
-      } /* 移動端點擊縮放 */
-
-      .btn-start:hover {
-        background: var(--neon-pink);
-        color: #eee;
-        box-shadow: 0 0 20px var(--neon-pink);
+        /* 關鍵：優化觸控，防止干擾滾動 */
+        touch-action: manipulation;
+        transition:
+          transform 0.1s,
+          background 0.1s;
+        -webkit-tap-highlight-color: transparent;
       }
 
+      /* 電腦端滑鼠懸停效果 */
+      @media (hover: hover) {
+        .btn-start:hover {
+          background: rgba(255, 0, 255, 0.1);
+          box-shadow: 0 0 20px var(--neon-pink);
+        }
+      }
+
+      /* 點擊瞬間的反饋：變實心粉紅底、縮放 */
       .btn-start:active {
         background: var(--neon-pink) !important;
-        color: #eee !important;
-        box-shadow: 0 0 20px var(--neon-pink) !important;
+        color: #fff !important;
+        transform: scale(0.95) !important;
+        box-shadow: 0 0 30px var(--neon-pink) !important;
+        transition: 0s; /* 點擊反饋要瞬間發生 */
+      }
+
+      /* 移除點擊後殘留的 focus 狀態顏色 */
+      .btn-start:focus {
+        outline: none;
+        background: transparent;
       }
 
       .opt-btn {
