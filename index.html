@@ -188,7 +188,6 @@
         text-align: center;
         outline: none;
       }
-
       .btn-start {
         border: 2px solid var(--neon-pink);
         color: var(--neon-pink);
@@ -199,20 +198,72 @@
         border-radius: 8px;
         cursor: pointer;
         margin-top: 25px;
-        transition: all 0.3s ease;
+        transition:
+          transform 0.1s,
+          background 0.1s; /* 縮短時間讓回饋更即時 */
         text-shadow: 0 0 10px var(--neon-pink);
         box-shadow: 0 0 15px rgba(255, 0, 255, 0.2);
         position: relative;
         overflow: hidden;
+        -webkit-tap-highlight-color: transparent; /* 移除行動端預設藍色區塊 */
       }
-      .btn-start:active {
-        transform: scale(0.95);
-      } /* 移動端點擊縮放 */
 
-      .btn-start:hover {
-        background: var(--neon-pink);
-        color: #eee;
-        box-shadow: 0 0 20px var(--neon-pink);
+      /* --- 圖示按鈕基礎樣式 --- */
+      .icon-btn {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(0, 242, 255, 0.5);
+        color: var(--neon-blue);
+        width: 38px;
+        height: 38px;
+        border-radius: 6px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      .icon-btn.share {
+        border-color: var(--neon-green);
+        color: var(--neon-green);
+      }
+
+      /* 只在支援「滑鼠懸停」的電腦裝置生效 */
+      @media (hover: hover) {
+        .btn-start:hover {
+          background: var(--neon-pink);
+          color: #eee;
+          box-shadow: 0 0 20px var(--neon-pink);
+        }
+      }
+
+      /* 手機與電腦通用的點擊 (Active) 效果 */
+      .btn-start:active {
+        transform: scale(0.92); /* 點擊縮小回饋 */
+        background: var(--neon-pink) !important; /* 強制變色 */
+        color: #fff !important;
+      }
+
+      /* --- 針對分享按鈕顏色黏住的修正 --- */
+      @media (hover: hover) {
+        .icon-btn:hover {
+          background: var(--neon-blue);
+          color: #000;
+        }
+        .icon-btn.share:hover {
+          background: var(--neon-green);
+          color: #000;
+        }
+      }
+
+      .icon-btn:active {
+        background: var(--neon-blue) !important;
+        color: #000 !important;
+      }
+
+      .icon-btn.share:active {
+        background: var(--neon-green) !important;
+        color: #000 !important;
       }
 
       .opt-btn {
@@ -282,40 +333,6 @@
         right: 15px;
         display: flex;
         gap: 10px;
-      }
-      /* --- 圖示按鈕基礎樣式 --- */
-      .icon-btn {
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(0, 242, 255, 0.5);
-        color: var(--neon-blue);
-        width: 38px;
-        height: 38px;
-        border-radius: 6px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-        transition: 0.3s;
-      }
-
-      /* --- 一般圖示 Hover --- */
-      .icon-btn:hover {
-        background: var(--neon-blue);
-        color: #000;
-        box-shadow: 0 0 15px var(--neon-blue);
-      }
-
-      /* --- 分享按鈕特殊顏色 --- */
-      .icon-btn.share {
-        border-color: var(--neon-green);
-        color: var(--neon-green);
-      }
-
-      /* --- 分享按鈕 Hover --- */
-      .icon-btn.share:hover {
-        background: var(--neon-green);
-        color: #000;
-        box-shadow: 0 0 15px var(--neon-green);
       }
 
       /* 確保下方沒有多餘的大括號或漏掉的標點符號 */
@@ -1004,6 +1021,11 @@
           else alert('請複製網址：' + window.location.href);
         } catch (err) {
           console.log(err);
+        } finally {
+          // 關鍵修正：點擊後強制讓按鈕失去焦點，顏色就會恢復正常
+          if (document.activeElement) {
+            document.activeElement.blur();
+          }
         }
       }
     </script>
