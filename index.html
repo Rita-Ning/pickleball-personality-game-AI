@@ -55,6 +55,11 @@
         overflow-y: auto;
       }
 
+      button {
+        -webkit-tap-highlight-color: transparent;
+        outline: none;
+      }
+
       #game-container {
         width: 100%;
         max-width: 420px;
@@ -239,9 +244,10 @@
 
       /* 手機與電腦通用的點擊 (Active) 效果 */
       .btn-start:active {
-        transform: scale(0.92); /* 點擊縮小回饋 */
-        background: var(--neon-pink) !important; /* 強制變色 */
+        background: var(--neon-pink) !important;
         color: #fff !important;
+        transform: scale(0.95);
+        transition: 0s;
       }
 
       /* --- 針對分享按鈕顏色黏住的修正 --- */
@@ -259,11 +265,20 @@
       .icon-btn:active {
         background: var(--neon-blue) !important;
         color: #000 !important;
+        transition: 0s;
       }
 
       .icon-btn.share:active {
         background: var(--neon-green) !important;
         color: #000 !important;
+        transition: 0s;
+      }
+
+      @media (hover: none) {
+        .btn-start:focus,
+        .icon-btn:focus {
+          background: transparent;
+        }
       }
 
       .opt-btn {
@@ -476,7 +491,7 @@
       }
     </style>
   </head>
-  <body>
+  <body ontouchstart="">
     <audio id="bgMusic" loop>
       <source src="bg_music.mp3" type="audio/mpeg" />
     </audio>
@@ -849,6 +864,7 @@
         };
 
       function startQuiz() {
+        if (document.activeElement) document.activeElement.blur();
         playerName =
           document.getElementById('playerName').value.trim() || '神秘球員';
         currentStep = 0;
@@ -980,6 +996,7 @@
 
       // 修正3: 下載/儲存截圖邏輯
       function downloadScreenshot() {
+        if (document.activeElement) document.activeElement.blur();
         const target = document.getElementById('screen-result');
         const actions = target.querySelector('.result-actions');
         const retestBtn = target.querySelector('button.btn-start');
@@ -1011,21 +1028,23 @@
       }
 
       async function shareToFriends() {
+        const btn = document.querySelector('.icon-btn.share');
+
         const shareData = {
           title: 'PCKL測驗結果',
           text: `我是 ${playerName}，我在 Pickleball 測驗中獲得了「${document.getElementById('result-name').innerText}」稱號！`,
           url: window.location.href,
         };
+
         try {
           if (navigator.share) await navigator.share(shareData);
           else alert('請複製網址：' + window.location.href);
         } catch (err) {
           console.log(err);
         } finally {
-          // 關鍵修正：點擊後強制讓按鈕失去焦點，顏色就會恢復正常
-          if (document.activeElement) {
-            document.activeElement.blur();
-          }
+          // 關鍵：無論分享是否成功，都釋放焦點
+          if (document.activeElement) document.activeElement.blur();
+          btn.blur();
         }
       }
     </script>
