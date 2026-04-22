@@ -189,7 +189,6 @@
         outline: none;
       }
 
-      /* START 與 RETEST 按鈕統一處理 */
       .btn-start {
         border: 2px solid var(--neon-pink);
         color: var(--neon-pink);
@@ -200,39 +199,20 @@
         border-radius: 8px;
         cursor: pointer;
         margin-top: 25px;
+        transition: all 0.3s ease;
         text-shadow: 0 0 10px var(--neon-pink);
         box-shadow: 0 0 15px rgba(255, 0, 255, 0.2);
         position: relative;
         overflow: hidden;
-        /* 關鍵：優化觸控，防止干擾滾動 */
-        touch-action: manipulation;
-        transition:
-          transform 0.1s,
-          background 0.1s;
-        -webkit-tap-highlight-color: transparent;
       }
-
-      /* 電腦端滑鼠懸停效果 */
-      @media (hover: hover) {
-        .btn-start:hover {
-          background: rgba(255, 0, 255, 0.1);
-          box-shadow: 0 0 20px var(--neon-pink);
-        }
-      }
-
-      /* 點擊瞬間的反饋：變實心粉紅底、縮放 */
       .btn-start:active {
-        background: var(--neon-pink) !important;
-        color: #fff !important;
-        transform: scale(0.95) !important;
-        box-shadow: 0 0 30px var(--neon-pink) !important;
-        transition: 0s; /* 點擊反饋要瞬間發生 */
-      }
+        transform: scale(0.95);
+      } /* 移動端點擊縮放 */
 
-      /* 移除點擊後殘留的 focus 狀態顏色 */
-      .btn-start:focus {
-        outline: none;
-        background: transparent;
+      .btn-start:hover {
+        background: var(--neon-pink);
+        color: #eee;
+        box-shadow: 0 0 20px var(--neon-pink);
       }
 
       .opt-btn {
@@ -880,12 +860,14 @@
           b.className = 'opt-btn';
           b.innerText = o.text;
 
-          // 修正：移除 e.preventDefault()，這會阻止 :active 狀態的顯示
-          b.onclick = () => {
+          // 定義統一的點擊處理邏輯
+          const handleSelect = (e) => {
+            e.preventDefault();
+
             finalScores[o.score]++;
             currentStep++;
 
-            // 確保在切換下一題前，按鈕失去焦點（移除 hover/focus 殘留）
+            // 確保在切換下一題前，按鈕失去焦點
             b.blur();
 
             if (currentStep < 7) {
@@ -895,14 +877,19 @@
             }
           };
 
-          // 僅保留 onclick，在 HTML 已經設定 touch-action: manipulation 的情況下
-          // 這樣點擊反應會非常即時且能觸發 CSS :active
+          // 使用 pointerdown 代替 click 可以讓移動端反應更快，且能觸發 CSS :active
+          b.ontouchstart = (e) => {
+            /* 保持空，讓 CSS :active 觸發 */
+          };
+          b.onclick = handleSelect;
+
           container.appendChild(b);
         });
 
         // 每一題載入時滾動到頂部
         window.scrollTo(0, 0);
       }
+
       function showResult() {
         // 1. 隱藏題目頁，顯示 Loading 頁
         document.getElementById('screen-quiz').classList.add('hidden');
