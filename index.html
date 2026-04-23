@@ -221,7 +221,6 @@
         -webkit-tap-highlight-color: transparent; /* 移除行動端預設藍色區塊 */
       }
 
-
       .icon-btn {
         background: rgba(255, 255, 255, 0.1);
         border: 1px solid rgba(0, 242, 255, 0.5);
@@ -1027,16 +1026,17 @@
 
       async function shareToFriends() {
         const btn = document.querySelector('.icon-btn.share');
+        const shareUrl = 'https://pickleball-personality-game-ai.vercel.app/';
 
         const shareData = {
           title: 'PCKL測驗結果',
-          text: `我是 ${playerName}，我在 Pickleball 測驗中獲得了「${document.getElementById('result-name').innerText}」稱號！`,
-          url: window.location.href,
+          text: `我在 Pickleball 測驗中獲得了「${document.getElementById('result-name').innerText}」稱號！換你測測看！`,
+          url: shareUrl,
         };
 
         try {
           if (navigator.share) await navigator.share(shareData);
-          else alert('請複製網址：' + window.location.href);
+          else alert('請複製網址：' + shareUrl);
         } catch (err) {
           console.log(err);
         } finally {
