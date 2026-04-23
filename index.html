@@ -361,8 +361,8 @@
       /* 確保下方沒有多餘的大括號或漏掉的標點符號 */
 
       .res-name {
-        font-size: 2.8rem;
-        font-weight: 900;
+        font-size: 2.2rem;
+        font-weight: 800;
         color: #fff;
         margin: 15px 0;
         text-shadow:
@@ -370,8 +370,8 @@
           0 0 30px var(--neon-pink);
       }
       .res-img-box {
-        width: 180px;
-        height: 180px;
+        width: 220px;
+        height: 220px;
         border: 3px solid var(--neon-green);
         border-radius: 12px;
         margin: 0 auto 20px;
@@ -633,20 +633,12 @@
             font-family: 'DotGothic16';
             color: #555;
             font-size: 0.7rem;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
+            margin-top: 10px;
             letter-spacing: 1px;
           "
         >
           REPORT_ID // @ <span id="player-id-display"></span>
-        </div>
-        <div
-          style="
-            color: var(--neon-green);
-            font-weight: 1000;
-            margin-bottom: 15px;
-          "
-        >
-          玩家代號：@ <span id="player-id-tag"></span>
         </div>
         <div class="res-img-box"><img id="result-img" src="" /></div>
         <div class="res-name" id="result-name"></div>
@@ -801,7 +793,7 @@
           name: '禪師',
           desc: '你是球場上的禪師。不論環境如何混亂，你始終保持自己的防守節奏。你打的不是球，是修行。',
           mate: '重砲獵手',
-          enemy: '幻影術士',
+          enemy: '變線魔術師',
           img: 'result1.png',
           author: 'Catherine Parenteau',
           quote:
@@ -809,16 +801,16 @@
         },
         tornado: {
           name: '重砲獵手',
-          desc: '力量就是正義。你的字典裡沒有「防守」，只有「擊潰」。<br>對手在你面前會感受到物理上的壓迫感。',
+          desc: '力量就是正義。你的字典裡沒有「防守」，只有「擊潰」。對手在你面前會感受到物理上的壓迫感。',
           mate: '禪師',
-          enemy: '數據怪傑',
+          enemy: '數據型玩家',
           img: 'result2.png',
           author: 'Tyson McGuffin',
           quote:
             "If you have a chance to put the ball away, don't hesitate. Power is a mindset.",
         },
         nerd: {
-          name: '數據怪傑',
+          name: '數據型玩家',
           desc: '數據驅動者。你了解球拍的每一根纖維。<br>你打的是物理力學與機率，不是匹克球。',
           mate: '任何聽你分析的人',
           enemy: '直覺系天才',
@@ -828,7 +820,7 @@
             'Pickleball is a game of percentages. Master the math, master the court.',
         },
         butterfly: {
-          name: '球場交際花',
+          name: '氣氛製造機',
           desc: '你是球場的快樂噴泉。如果打球不能交朋友<br>那贏球也沒意義。',
           mate: '會找餐廳的朋友',
           enemy: '嚴肅魔人',
@@ -838,8 +830,8 @@
             "The best part of this game isn't the trophy, it's the community we build.",
         },
         wand: {
-          name: '幻影術士',
-          desc: '幻影魔術師。假動作的大師。你的球路連隊友都抓不到，對手抓狂是你最大的樂趣。',
+          name: '變線高手',
+          desc: '假動作大師。你的球路連隊友都抓不到，<br>對手抓狂是你最大的樂趣。',
           mate: '心臟強大的隊友',
           enemy: '禪師',
           img: 'result5.png',
@@ -966,7 +958,7 @@
 
           // --- 渲染資料 ---
           document.getElementById('player-id-display').innerText = playerName;
-          document.getElementById('player-id-tag').innerText = playerName;
+          // document.getElementById('player-id-tag').innerText = playerName; // 已删除
           document.getElementById('result-name').innerText = d.name;
           document.getElementById('result-img').src = d.img;
           document.getElementById('result-desc').innerHTML = d.desc;
@@ -980,8 +972,7 @@
           const imgBorder = document.getElementsByClassName('res-img-box')[0];
           if (res === 'ghost' || res === 'tornado') {
             imgBorder.style.border = '3px solid var(--neon-pink)';
-          }
-          if (res === 'butterfly' || res === 'nerd') {
+          } else if (res === 'butterfly' || res === 'nerd') {
             imgBorder.style.border = '3px solid var(--neon-green)';
           } else {
             imgBorder.style.border = '3px solid var(--neon-blue)';
