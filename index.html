@@ -625,20 +625,12 @@
             font-family: 'DotGothic16';
             color: #555;
             font-size: 0.7rem;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
+            margin-top: 10px;
             letter-spacing: 1px;
           "
         >
           REPORT_ID // @ <span id="player-id-display"></span>
-        </div>
-        <div
-          style="
-            color: var(--neon-green);
-            font-weight: 1000;
-            margin-bottom: 15px;
-          "
-        >
-          玩家代號：@ <span id="player-id-tag"></span>
         </div>
         <div class="res-img-box"><img id="result-img" src="" /></div>
         <div class="res-name" id="result-name"></div>
@@ -959,7 +951,7 @@
 
           // --- 渲染資料 ---
           document.getElementById('player-id-display').innerText = playerName;
-          document.getElementById('player-id-tag').innerText = playerName;
+          // document.getElementById('player-id-tag').innerText = playerName; // 已删除
           document.getElementById('result-name').innerText = d.name;
           document.getElementById('result-img').src = d.img;
           document.getElementById('result-desc').innerHTML = d.desc;
